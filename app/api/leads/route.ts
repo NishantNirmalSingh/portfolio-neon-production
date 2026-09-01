@@ -1,9 +1,32 @@
 import { NextResponse } from "next/server";
 import { db } from "@/lib/db";
 import { put } from "@vercel/blob";
+import { headers } from "next/headers";
+
+// Basic In-Memory Rate Limiter (Protects this specific Vercel local node instance)
+const rateLimitMap = new Map<string, { count: number; expires: number }>();
+const MAX_LEADS = 3;
+const WINDOW_MS = 60 * 60 * 1000; // 1 hour
 
 export async function POST(req: Request) {
   try {
+    const ip = headers().get("x-forwarded-for") || "unknown";
+    const now = Date.now();
+    
+    // Check Rate Limit
+    if (ip !== "unknown") {
+      const current = rateLimitMap.get(ip);
+      if (current && now < current.expires && current.count >= MAX_LEADS) {
+         return NextResponse.json({ error: "Too many submissions, please wait a while before trying again" }, { status: 429 });
+      }
+      // Record attempt
+      if (!current || now > current.expires) {
+        rateLimitMap.set(ip, { count: 1, expires: now + WINDOW_MS });
+      } else {
+        current.count += 1;
+      }
+    }
+
     const formData = await req.formData();
     
     // Extract file

@@ -133,6 +133,7 @@ export default function HireMePage() {
     handleSubmit,
     watch,
     setValue,
+    trigger,
     formState: { errors },
   } = useForm<FormData>({
     resolver: zodResolver(schema),
@@ -167,9 +168,25 @@ export default function HireMePage() {
     }
   }
 
-  function nextStep() {
-    playSound("click");
-    setStep((s) => Math.min(s + 1, STEPS.length - 1));
+  async function nextStep() {
+    let isValid = true;
+    
+    if (step === 0) {
+      isValid = await trigger(['projectType']);
+    } else if (step === 1) {
+      isValid = await trigger(['projectName', 'projectDescription']);
+    } else if (step === 2) {
+      isValid = await trigger(['estimatedBudget', 'targetDeadline']);
+    } else if (step === 3) {
+      isValid = await trigger(['name', 'email', 'phone', 'company']);
+    }
+
+    if (isValid) {
+      playSound("click");
+      setStep((s) => Math.min(s + 1, STEPS.length - 1));
+    } else {
+      // Play error sound or just let form show validation errors
+    }
   }
   function prevStep() {
     playSound("click");

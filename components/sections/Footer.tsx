@@ -10,22 +10,22 @@ const links = [
   {
     icon: Github,
     label: 'GitHub',
-    value: 'github.com/yourhandle',
-    href: 'https://github.com/yourhandle',
+    value: 'github.com/NishantNirmalSingh',
+    href: 'https://github.com/NishantNirmalSingh',
     color: 'hover:text-white',
   },
   {
     icon: Linkedin,
     label: 'LinkedIn',
-    value: 'linkedin.com/in/yourname',
-    href: 'https://linkedin.com/in/yourname',
+    value: 'linkedin.com/in/nishantnirmalsingh',
+    href: 'https://www.linkedin.com/in/nishantnirmalsingh/',
     color: 'hover:text-[#0077b5]',
   },
   {
     icon: Mail,
     label: 'Email',
-    value: 'your@email.com',
-    href: 'mailto:your@email.com',
+    value: 'nirmalnishant.4245@gmail.com',
+    href: 'mailto:nirmalnishant.4245@gmail.com',
     color: 'hover:text-[#00f0ff]',
   },
   {
@@ -33,6 +33,13 @@ const links = [
     label: 'Phone / WhatsApp',
     value: '+91 99054 90862',
     href: 'https://wa.me/919905490862',
+    color: 'hover:text-[#4ade80]',
+  },
+  {
+    icon: Phone,
+    label: 'Alternate Phone',
+    value: '+91 79090 76369',
+    href: 'tel:+917909076369',
     color: 'hover:text-[#4ade80]',
   },
 ];
@@ -160,9 +167,19 @@ export default function Footer() {
           <p className="text-xs text-white/30 font-light">
             © {new Date().getFullYear()} dev.port. All rights reserved.
           </p>
-          <div className="flex items-center gap-2 text-xs font-mono text-white/30 tracking-widest">
-            <span className="w-1.5 h-1.5 rounded-full bg-[#00f0ff] animate-pulse shadow-[0_0_5px_#00f0ff]" />
-            SYSTEM_ONLINE
+          <div className="flex items-center gap-6">
+            <Link 
+              href="/admin/login" 
+              className="text-xs font-mono text-white/30 hover:text-[#00f0ff] transition-colors uppercase tracking-widest"
+              onMouseEnter={() => setCursorType("pointer")}
+              onMouseLeave={() => setCursorType("default")}
+            >
+              Admin Access
+            </Link>
+            <div className="flex items-center gap-2 text-xs font-mono text-white/30 tracking-widest">
+              <span className="w-1.5 h-1.5 rounded-full bg-[#00f0ff] animate-pulse shadow-[0_0_5px_#00f0ff]" />
+              SYSTEM_ONLINE
+            </div>
           </div>
         </div>
       </div>

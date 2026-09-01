@@ -3,9 +3,12 @@
 import { db } from "@/lib/db";
 import { revalidatePath } from "next/cache";
 import { del } from "@vercel/blob";
+import { getSession } from "@/lib/auth";
 
 export async function updateLeadStatus(id: string, newStatus: string) {
   try {
+    const session = await getSession();
+    if (!session) throw new Error("Unauthorized access detected");
     await db.lead.update({
       where: { id },
       data: { status: newStatus },
@@ -20,6 +23,9 @@ export async function updateLeadStatus(id: string, newStatus: string) {
 
 export async function deleteLeadAndStorage(id: string, attachmentUrl: string | null) {
   try {
+    const session = await getSession();
+    if (!session) throw new Error("Unauthorized access detected");
+
     // 1. Delete associated PDF file from Vercel Blob if exists
     if (attachmentUrl) {
       await del(attachmentUrl);
@@ -40,6 +46,9 @@ export async function deleteLeadAndStorage(id: string, attachmentUrl: string | n
 
 export async function deleteBlobAction(url: string) {
   try {
+    const session = await getSession();
+    if (!session) throw new Error("Unauthorized access detected");
+
     // 1. Delete the actual file from Vercel Blob
     await del(url);
 

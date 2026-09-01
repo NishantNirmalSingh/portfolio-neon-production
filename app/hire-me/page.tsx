@@ -124,6 +124,7 @@ export default function HireMePage() {
   const [step, setStep] = useState(0);
   const [submitted, setSubmitted] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [uploadStatus, setUploadStatus] = useState<'idle' | 'uploading' | 'saving' | 'done'>('idle');
   const [file, setFile] = useState<File | null>(null);
   const { playSound } = useAudio();
   const { setCursorType } = useCursor();
@@ -145,7 +146,8 @@ export default function HireMePage() {
   async function onSubmit(data: FormData) {
     if (isSubmitting) return;
     setIsSubmitting(true);
-    
+    setUploadStatus(file ? 'uploading' : 'saving');
+
     try {
       const formData = new FormData();
       Object.entries(data).forEach(([key, value]) => {
@@ -154,21 +156,26 @@ export default function HireMePage() {
         }
       });
       if (file) formData.append("file", file);
-      
+
+      // If there's a file, signal we've handed it off and are now saving
+      if (file) setUploadStatus('saving');
+
       const res = await fetch("/api/leads", { method: "POST", body: formData });
       if (!res.ok) {
         let errorMsg = "Failed to submit request.";
         try {
           const errorData = await res.json();
           if (errorData.error) errorMsg = errorData.error;
-        } catch(e) {}
+        } catch (e) { }
         throw new Error(errorMsg);
       }
-      
+
+      setUploadStatus('done');
       playSound("click");
       setSubmitted(true);
     } catch (error: any) {
       console.error('Submission error:', error);
+      setUploadStatus('idle');
       alert(error.message || 'Network Error. Cannot transmit signal.');
     } finally {
       setIsSubmitting(false);
@@ -177,7 +184,7 @@ export default function HireMePage() {
 
   async function nextStep() {
     let isValid = true;
-    
+
     if (step === 0) {
       isValid = await trigger(['projectType']);
     } else if (step === 1) {
@@ -226,7 +233,7 @@ export default function HireMePage() {
   return (
     <main className="min-h-screen relative pt-28 pb-16 overflow-hidden z-10">
       <Navbar />
-      
+
       {/* Background Magic Elements */}
       <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-[radial-gradient(circle_at_center,rgba(124,58,237,0.15),transparent_70%)] pointer-events-none" />
       <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-[radial-gradient(circle_at_center,rgba(0,240,255,0.15),transparent_70%)] pointer-events-none" />
@@ -247,13 +254,12 @@ export default function HireMePage() {
             {STEPS.map((label, i) => (
               <div key={label} className="flex flex-col items-center gap-2 flex-1 relative">
                 <div
-                  className={`w-10 h-10 rounded-xl flex items-center justify-center text-sm font-bold transition-all duration-500 z-10 ${
-                    i < step
+                  className={`w-10 h-10 rounded-xl flex items-center justify-center text-sm font-bold transition-all duration-500 z-10 ${i < step
                       ? 'bg-gradient-to-br from-[#00f0ff] to-[#7c3aed] text-black shadow-[0_0_15px_#00f0ff]'
                       : i === step
-                      ? 'glass-tier-3 border-[rgba(0,240,255,0.5)] text-[#00f0ff] shadow-[inset_0_0_10px_rgba(0,240,255,0.2)]'
-                      : 'glass-tier-1 text-white/30 border-white/5'
-                  }`}
+                        ? 'glass-tier-3 border-[rgba(0,240,255,0.5)] text-[#00f0ff] shadow-[inset_0_0_10px_rgba(0,240,255,0.2)]'
+                        : 'glass-tier-1 text-white/30 border-white/5'
+                    }`}
                 >
                   {i < step ? <CheckCircle size={16} /> : i + 1}
                 </div>
@@ -263,8 +269,8 @@ export default function HireMePage() {
                 {/* Connecting Line */}
                 {i < STEPS.length - 1 && (
                   <div className="absolute top-5 left-1/2 w-full h-[2px] -z-10 bg-white/5">
-                    <div 
-                      className="h-full bg-gradient-to-r from-[#00f0ff] to-[#7c3aed] transition-all duration-1000 ease-in-out" 
+                    <div
+                      className="h-full bg-gradient-to-r from-[#00f0ff] to-[#7c3aed] transition-all duration-1000 ease-in-out"
                       style={{ width: step > i ? '100%' : '0%' }}
                     />
                   </div>
@@ -275,13 +281,13 @@ export default function HireMePage() {
         </div>
 
         {/* Form Container */}
-        <form onSubmit={(e) => { e.preventDefault(); /* handeled by Ignition */}}>
-          <motion.div 
-             key={step}
-             initial={{ opacity: 0, x: 20 }}
-             animate={{ opacity: 1, x: 0 }}
-             transition={{ duration: 0.4 }}
-             className="glass-tier-2 rounded-3xl p-8 md:p-12 min-h-[420px] flex flex-col relative overflow-hidden"
+        <form onSubmit={(e) => { e.preventDefault(); /* handeled by Ignition */ }}>
+          <motion.div
+            key={step}
+            initial={{ opacity: 0, x: 20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.4 }}
+            className="glass-tier-2 rounded-3xl p-8 md:p-12 min-h-[420px] flex flex-col relative overflow-hidden"
           >
             {/* Internal aesthetic lines */}
             <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-[#00f0ff] to-[#7c3aed] opacity-50" />
@@ -298,11 +304,10 @@ export default function HireMePage() {
                       onClick={() => { setValue('projectType', type.value as FormData['projectType']); playSound("click"); }}
                       onMouseEnter={() => setCursorType("pointer")}
                       onMouseLeave={() => setCursorType("default")}
-                      className={`text-left p-5 rounded-2xl border transition-all duration-300 group ${
-                        watchAll.projectType === type.value
+                      className={`text-left p-5 rounded-2xl border transition-all duration-300 group ${watchAll.projectType === type.value
                           ? 'border-[rgba(0,240,255,0.6)] bg-[rgba(0,240,255,0.1)] text-white shadow-[0_0_20px_rgba(0,240,255,0.15)]'
                           : 'border-white/10 glass-tier-1 hover:border-[#00f0ff]/30 text-white/60 hover:text-white'
-                      }`}
+                        }`}
                     >
                       <div className="font-bold text-sm mb-2">{type.label}</div>
                       <div className="text-xs text-white/40 font-light">{type.desc}</div>
@@ -385,11 +390,10 @@ export default function HireMePage() {
                         onClick={() => { setValue('estimatedBudget', opt.value as FormData['estimatedBudget']); playSound("click"); }}
                         onMouseEnter={() => setCursorType("pointer")}
                         onMouseLeave={() => setCursorType("default")}
-                        className={`text-sm px-4 py-4 rounded-xl border transition-all ${
-                          watchAll.estimatedBudget === opt.value
+                        className={`text-sm px-4 py-4 rounded-xl border transition-all ${watchAll.estimatedBudget === opt.value
                             ? 'border-[#00f0ff]/60 bg-[#00f0ff]/10 text-white font-bold shadow-[0_0_15px_rgba(0,240,255,0.2)]'
                             : 'border-white/10 glass-tier-1 hover:border-[#00f0ff]/30 text-white/50 hover:text-white'
-                        }`}
+                          }`}
                       >
                         {opt.label}
                       </button>
@@ -460,11 +464,25 @@ export default function HireMePage() {
                 </div>
 
                 {/* The Magic Orb Submit */}
-                <div className="flex items-center justify-center pt-4 md:pt-0">
-                  <HoldToSubmit 
-                    onTrigger={handleSubmit(onSubmit)} 
-                    disabled={isSubmitting} 
+                <div className="flex flex-col items-center justify-center pt-4 md:pt-0 gap-4">
+                  <HoldToSubmit
+                    onTrigger={handleSubmit(onSubmit)}
+                    disabled={isSubmitting}
                   />
+                  {/* Status feedback — shown while isSubmitting so user knows it's working */}
+                  {isSubmitting && (
+                    <div className="flex flex-col items-center gap-2 animate-pulse">
+                      <div className="flex items-center gap-2">
+                        <span className="w-2 h-2 rounded-full bg-[#00f0ff] animate-ping" />
+                        <span className="text-[11px] font-mono tracking-widest text-[#00f0ff] uppercase">
+                          {uploadStatus === 'uploading' && 'Uploading file...'}
+                          {uploadStatus === 'saving' && 'Saving to database...'}
+                          {uploadStatus === 'done' && 'Done!'}
+                        </span>
+                      </div>
+                      <p className="text-[10px] text-white/30 font-light">Please wait, do not close the page</p>
+                    </div>
+                  )}
                 </div>
               </div>
             )}
@@ -483,9 +501,9 @@ export default function HireMePage() {
                   <ArrowLeft size={14} /> Revert
                 </button>
 
-                <button 
-                  type="button" 
-                  onClick={nextStep} 
+                <button
+                  type="button"
+                  onClick={nextStep}
                   onMouseEnter={() => setCursorType("pointer")}
                   onMouseLeave={() => setCursorType("default")}
                   className="flex items-center gap-2 px-6 py-2.5 rounded-full bg-gradient-to-r from-[#00f0ff] to-[#7c3aed] text-black font-bold text-xs font-mono uppercase tracking-widest hover:opacity-90 active:scale-95 transition-all shadow-[0_0_15px_rgba(0,240,255,0.3)]"
@@ -494,10 +512,10 @@ export default function HireMePage() {
                 </button>
               </div>
             )}
-            
+
             {step === 4 && (
               <div className="flex items-center justify-start mt-10 pt-6 border-t border-white/10">
-                 <button
+                <button
                   type="button"
                   onClick={prevStep}
                   onMouseEnter={() => setCursorType("pointer")}

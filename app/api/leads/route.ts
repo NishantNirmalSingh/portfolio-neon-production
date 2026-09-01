@@ -12,12 +12,12 @@ export async function POST(req: Request) {
   try {
     const ip = headers().get("x-forwarded-for") || "unknown";
     const now = Date.now();
-    
+
     // Check Rate Limit
     if (ip !== "unknown") {
       const current = rateLimitMap.get(ip);
       if (current && now < current.expires && current.count >= MAX_LEADS) {
-         return NextResponse.json({ error: "Too many submissions, please wait a while before trying again" }, { status: 429 });
+        return NextResponse.json({ error: "Too many submissions, please wait a while before trying again" }, { status: 429 });
       }
       // Record attempt
       if (!current || now > current.expires) {
@@ -28,14 +28,15 @@ export async function POST(req: Request) {
     }
 
     const formData = await req.formData();
-    
+
     // Extract file
     const file = formData.get("file") as File | null;
     let attachmentUrl = null;
 
     if (file) {
       const safeName = file.name.replace(/[^a-zA-Z0-9.\-_]/g, "");
-      const blob = await put(`leads/${Date.now()}_${safeName}`, file, {
+      const buffer = Buffer.from(await file.arrayBuffer());
+      const blob = await put(`leads/${Date.now()}_${safeName}`, buffer, {
         access: "public",
         addRandomSuffix: false,
       });

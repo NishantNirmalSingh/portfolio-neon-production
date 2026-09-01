@@ -3,7 +3,7 @@ generator client {
 }
 
 datasource db {
-  provider = "mysql"
+  provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 
@@ -40,8 +40,8 @@ model Project {
   shortDescription String
   fullDescription  String   @db.Text
   category         String
-  technologies     String   // Commma-separated or JSON
-  images           String   // JSON array of strings
+  technologies     String[]
+  images           String[]
   githubUrl        String?
   liveUrl          String?
   featured         Boolean  @default(false)

@@ -27,15 +27,20 @@ export async function POST(req: Request) {
       }
     }
 
-    const formData = await req.formData();
+    const body = await req.json();
 
-    // Extract file
-    const file = formData.get("file") as File | null;
     let attachmentUrl = null;
 
-    if (file) {
-      const safeName = file.name.replace(/[^a-zA-Z0-9.\-_]/g, "");
-      const buffer = Buffer.from(await file.arrayBuffer());
+    if (body.fileData && body.fileName) {
+      const safeName = body.fileName.replace(/[^a-zA-Z0-9.\-_]/g, "");
+      
+      // base64Str format is usually "data:application/pdf;base64,JVBERi..."
+      // We extract just the base64 part content
+      const base64Content = body.fileData.includes(',') 
+        ? body.fileData.split(',')[1] 
+        : body.fileData;
+        
+      const buffer = Buffer.from(base64Content, 'base64');
       const blob = await put(`leads/${Date.now()}_${safeName}`, buffer, {
         access: "public",
         addRandomSuffix: false,
@@ -45,15 +50,15 @@ export async function POST(req: Request) {
 
     // Prepare text data
     const data = {
-      projectType: formData.get("projectType") as string,
-      projectName: formData.get("projectName") as string,
-      projectDescription: formData.get("projectDescription") as string,
-      estimatedBudget: formData.get("estimatedBudget") as string,
-      targetDeadline: formData.get("targetDeadline") as string,
-      name: formData.get("name") as string,
-      email: formData.get("email") as string,
-      phone: formData.get("phone") as string || null,
-      company: formData.get("company") as string || null,
+      projectType: body.projectType as string,
+      projectName: body.projectName as string,
+      projectDescription: body.projectDescription as string,
+      estimatedBudget: body.estimatedBudget as string,
+      targetDeadline: body.targetDeadline as string,
+      name: body.name as string,
+      email: body.email as string,
+      phone: body.phone as string || null,
+      company: body.company as string || null,
       attachmentUrl,
     };
 

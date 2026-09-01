@@ -149,18 +149,31 @@ export default function HireMePage() {
     setUploadStatus(file ? 'uploading' : 'saving');
 
     try {
-      const formData = new FormData();
-      Object.entries(data).forEach(([key, value]) => {
-        if (value !== undefined && value !== null) {
-          formData.append(key, String(value));
-        }
+      const payload: any = { ...data };
+
+      if (file) {
+        // Read file as base64 string to bypass Next.js FormData stream stalls
+        const base64Str = await new Promise<string>((resolve, reject) => {
+          const reader = new FileReader();
+          reader.onload = () => resolve(reader.result as string);
+          reader.onerror = reject;
+          reader.readAsDataURL(file);
+        });
+        
+        payload.fileData = base64Str; // Format: "data:application/pdf;base64,...""
+        payload.fileName = file.name;
+        
+        setUploadStatus('saving');
+      }
+
+      const res = await fetch("/api/leads", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(payload),
       });
-      if (file) formData.append("file", file);
 
-      // If there's a file, signal we've handed it off and are now saving
-      if (file) setUploadStatus('saving');
-
-      const res = await fetch("/api/leads", { method: "POST", body: formData });
       if (!res.ok) {
         let errorMsg = "Failed to submit request.";
         try {

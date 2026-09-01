@@ -5,7 +5,7 @@ import { headers } from "next/headers";
 
 // Basic In-Memory Rate Limiter (Protects this specific Vercel local node instance)
 const rateLimitMap = new Map<string, { count: number; expires: number }>();
-const MAX_LEADS = 3;
+const MAX_LEADS = 30;
 const WINDOW_MS = 60 * 60 * 1000; // 1 hour
 
 export async function POST(req: Request) {
@@ -34,8 +34,6 @@ export async function POST(req: Request) {
     let attachmentUrl = null;
 
     if (file) {
-      // Free Vercel Blob requires NEXT_PUBLIC_BLOB_READ_WRITE_TOKEN to be set in environment
-      // Ensure file name is purely alphanumeric/safe
       const safeName = file.name.replace(/[^a-zA-Z0-9.\-_]/g, "");
       const blob = await put(`leads/${Date.now()}_${safeName}`, file, {
         access: "public",
@@ -67,8 +65,8 @@ export async function POST(req: Request) {
     });
 
     return NextResponse.json({ success: true, leadId: lead.id });
-  } catch (error) {
+  } catch (error: any) {
     console.error("Lead submission error:", error);
-    return NextResponse.json({ error: "Failed to process lead" }, { status: 500 });
+    return NextResponse.json({ error: "Failed to process the lead submission due to a server error. Please verify the system is fully operational." }, { status: 500 });
   }
 }

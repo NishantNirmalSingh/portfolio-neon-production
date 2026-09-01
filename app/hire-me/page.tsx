@@ -156,13 +156,20 @@ export default function HireMePage() {
       if (file) formData.append("file", file);
       
       const res = await fetch("/api/leads", { method: "POST", body: formData });
-      if (!res.ok) throw new Error("Failed to submit request.");
+      if (!res.ok) {
+        let errorMsg = "Failed to submit request.";
+        try {
+          const errorData = await res.json();
+          if (errorData.error) errorMsg = errorData.error;
+        } catch(e) {}
+        throw new Error(errorMsg);
+      }
       
       playSound("click");
       setSubmitted(true);
-    } catch (error) {
+    } catch (error: any) {
       console.error('Submission error:', error);
-      alert('Network Error. Cannot transmit signal.');
+      alert(error.message || 'Network Error. Cannot transmit signal.');
     } finally {
       setIsSubmitting(false);
     }

@@ -20,6 +20,7 @@ export async function GET(req: Request) {
 
     return NextResponse.json({ success: true, email: user.email });
   } catch (err: any) {
-    return NextResponse.json({ success: false, error: err.message }, { status: 500 });
+    console.error("Admin setup error:", err);
+    return NextResponse.json({ success: false, error: "System initialization failed. Please refer to server logs." }, { status: 500 });
   }
 }

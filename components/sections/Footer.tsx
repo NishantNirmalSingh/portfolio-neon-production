@@ -38,11 +38,11 @@ const links = [
 ];
 
 const navLinks = [
-  { label: 'Home', href: '#hero' },
-  { label: 'About', href: '#about' },
-  { label: 'Skills', href: '#skills' },
-  { label: 'Services', href: '#services' },
-  { label: 'Projects', href: '#projects' },
+  { label: 'Home', href: '/#hero' },
+  { label: 'About', href: '/#about' },
+  { label: 'Skills', href: '/#skills' },
+  { label: 'Services', href: '/#services' },
+  { label: 'Projects', href: '/#projects' },
 ];
 
 export default function Footer() {

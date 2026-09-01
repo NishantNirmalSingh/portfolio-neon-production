@@ -28,7 +28,6 @@
   box-sizing: border-box;
   margin: 0;
   padding: 0;
-  cursor: none; /* Hide default cursor if implementing custom! We'll handle this in components */
 }
 
 /* We only hide cursor purely if custom cursor context is active, so we use a utility class */

@@ -48,12 +48,19 @@ const budgetOptions = [
 // ─── Ignition Submit Button ──────────────────────────────
 function HoldToSubmit({ onTrigger, disabled }: { onTrigger: () => void, disabled: boolean }) {
   const [progress, setProgress] = useState(0);
+  const [triggered, setTriggered] = useState(false);
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
+  const onTriggerRef = useRef(onTrigger);
   const { setCursorType } = useCursor();
   const { playSound } = useAudio();
 
+  // Keep ref in sync without re-running effects
+  useEffect(() => {
+    onTriggerRef.current = onTrigger;
+  }, [onTrigger]);
+
   const startCharge = () => {
-    if (disabled) return;
+    if (disabled || triggered) return;
     playSound("click");
     intervalRef.current = setInterval(() => {
       setProgress((p) => {
@@ -68,16 +75,17 @@ function HoldToSubmit({ onTrigger, disabled }: { onTrigger: () => void, disabled
 
   const stopCharge = () => {
     if (intervalRef.current) clearInterval(intervalRef.current);
-    if (progress < 100) {
+    if (progress < 100 && !triggered) {
       setProgress(0);
     }
   };
 
   useEffect(() => {
-    if (progress >= 100) {
-      onTrigger();
+    if (progress >= 100 && !triggered) {
+      setTriggered(true);
+      onTriggerRef.current();
     }
-  }, [progress, onTrigger]);
+  }, [progress, triggered]);
 
   return (
     <div className="relative flex flex-col items-center justify-center pointer-events-auto">
@@ -88,9 +96,9 @@ function HoldToSubmit({ onTrigger, disabled }: { onTrigger: () => void, disabled
         onPointerLeave={stopCharge}
         onMouseEnter={() => setCursorType("pointer")}
         onMouseLeave={() => setCursorType("default")}
-        disabled={disabled}
+        disabled={disabled || triggered}
         animate={{ scale: progress === 100 ? 1.2 : 1 + (progress / 100) * 0.2 }}
-        className={`relative w-24 h-24 rounded-full flex items-center justify-center transition-all ${disabled ? 'opacity-50 grayscale' : ''}`}
+        className={`relative w-24 h-24 rounded-full flex items-center justify-center transition-all ${disabled || triggered ? 'opacity-50 grayscale' : ''}`}
       >
         {/* The Core Orb */}
         <div className="absolute inset-0 rounded-full bg-gradient-to-tr from-[#00f0ff] to-[#7c3aed] shadow-[0_0_20px_#00f0ff] opacity-80" />
@@ -104,7 +112,7 @@ function HoldToSubmit({ onTrigger, disabled }: { onTrigger: () => void, disabled
           />
         </svg>
         <span className="relative z-10 text-[10px] font-mono font-bold tracking-widest text-black text-center whitespace-nowrap px-2">
-          {progress >= 100 ? "IGNITED" : progress > 0 ? "CHARGING..." : "HOLD\nTO\nIGNITE"}
+          {triggered ? "IGNITED" : progress > 0 ? "CHARGING..." : "HOLD\nTO\nIGNITE"}
         </span>
       </motion.button>
     </div>

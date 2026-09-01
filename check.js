@@ -1,6 +1,1 @@
-const { execSync } = require('child_process');
-try {
-  console.log(execSync('npx tsc --noEmit', { encoding: 'utf-8', cwd: __dirname }));
-} catch (e) {
-  console.log(e.stdout);
-}
+const fs = require('fs'); const { execSync } = require('child_process'); try { const out = execSync('npx tsc --noEmit').toString(); fs.writeFileSync('npx_out.txt', 'SUCCESS\n' + out); } catch (e) { fs.writeFileSync('npx_out.txt', 'ERROR\n' + (e.stdout ? e.stdout.toString() : e.message)); }

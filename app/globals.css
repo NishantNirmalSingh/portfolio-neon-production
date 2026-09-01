@@ -1,0 +1,133 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;700&display=swap');
+
+:root {
+  --font-inter: 'Inter', sans-serif;
+  --font-jetbrains: 'JetBrains Mono', monospace;
+
+  /* Dreamscape Palette */
+  --bg-deep: #010108;       /* Very dark midnight blue */
+  --bg-atmosphere: #050514; /* Slightly lighter atmospheric */
+  
+  /* Neon Accents */
+  --neon-cyan: #00f0ff;
+  --neon-violet: #7c3aed;
+  --neon-magenta: #f72585;
+  --fire-orange: #ff5a00;
+  --fire-yellow: #ffb800;
+  
+  /* Text */
+  --text-primary: #f0f4ff;
+  --text-muted: rgba(240, 244, 255, 0.45);
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  cursor: none; /* Hide default cursor if implementing custom! We'll handle this in components */
+}
+
+/* We only hide cursor purely if custom cursor context is active, so we use a utility class */
+.hide-native-cursor, .hide-native-cursor * {
+  cursor: none !important;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background-color: var(--bg-deep);
+  color: var(--text-primary);
+  font-family: var(--font-inter);
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Scrollbar styling (Liquid Dreamy) */
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  background: var(--bg-deep);
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(0, 240, 255, 0.2);
+  border-radius: 6px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(0, 240, 255, 0.5);
+}
+
+::selection {
+  background: rgba(124, 58, 237, 0.4);
+  color: #fff;
+  text-shadow: 0 0 10px rgba(255,255,255,0.5);
+}
+
+/* Component Utilities */
+@layer components {
+  /* Glassmorphism System */
+  .glass-tier-1 {
+    @apply bg-white/[0.015] backdrop-blur-[6px] border border-white/[0.04];
+    box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.5);
+  }
+  
+  .glass-tier-2 {
+    @apply bg-white/[0.03] backdrop-blur-md border border-white/[0.08];
+    box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.5), inset 0 0 20px rgba(255, 255, 255, 0.01);
+  }
+
+  .glass-tier-3 {
+    @apply bg-white/[0.05] backdrop-blur-lg border border-white/[0.12];
+    box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.5), inset 0 0 30px rgba(255, 255, 255, 0.02);
+  }
+
+  /* Interactive Elements */
+  .interactive-hover {
+    @apply transition-all duration-500 ease-[cubic-bezier(0.23,1,0.32,1)];
+  }
+
+  .interactive-hover:hover {
+    @apply border-[rgba(0,240,255,0.4)] bg-white/[0.05];
+    box-shadow: 0 0 30px rgba(0, 240, 255, 0.1), inset 0 0 20px rgba(0, 240, 255, 0.05);
+  }
+
+  /* Typography */
+  .heading-cinematic {
+    @apply text-5xl md:text-7xl font-bold font-inter tracking-tight;
+    background: linear-gradient(135deg, #fff 0%, rgba(255,255,255,0.4) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+}
+
+/* Fire/Magical Animations */
+@keyframes spark-burst {
+  0% { transform: scale(0) rotate(0deg); opacity: 1; }
+  50% { transform: scale(1.5) rotate(45deg); opacity: 0.8; }
+  100% { transform: scale(0) rotate(90deg); opacity: 0; }
+}
+
+.fire-spark {
+  position: absolute;
+  pointer-events: none;
+  background: radial-gradient(circle, var(--fire-yellow) 0%, var(--fire-orange) 50%, transparent 100%);
+  border-radius: 50%;
+  mix-blend-mode: screen;
+}
+
+/* Reduced Motion Safety */
+@media (prefers-reduced-motion: reduce) {
+  *, ::before, ::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

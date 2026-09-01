@@ -73,7 +73,7 @@ export default function Footer() {
               <span className="bg-gradient-to-r from-[#00f0ff] to-[#7c3aed] text-transparent bg-clip-text">Phase.</span>
             </h2>
             <p className="text-white/50 mb-10 max-w-lg mx-auto font-light leading-relaxed">
-              Available for ambitious freelance projects. Let's merge cutting-edge tech with premium design.
+              Available for ambitious freelance projects. Let&apos;s merge cutting-edge tech with premium design.
             </p>
             
             <div className="flex flex-col sm:flex-row gap-6 justify-center items-center">

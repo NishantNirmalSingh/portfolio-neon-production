@@ -49,6 +49,8 @@ export default function InteractiveCursor() {
       backgroundColor: "rgba(0, 240, 255, 0.1)",
       border: "1px solid rgba(0, 240, 255, 0.5)",
       mixBlendMode: "screen" as any,
+      marginLeft: 0,
+      marginTop: 0,
     },
     pointer: {
       height: 64,
@@ -56,8 +58,8 @@ export default function InteractiveCursor() {
       backgroundColor: "rgba(124, 58, 237, 0.15)",
       border: "1px solid rgba(124, 58, 237, 0.8)",
       mixBlendMode: "screen" as any,
-      x: "-16px", // adjust center for size change
-      y: "-16px",
+      marginLeft: -16, // adjust center for size change
+      marginTop: -16,
     },
   };
 

@@ -44,8 +44,8 @@ export default function Hero() {
       )}
 
       {/* Radial Atmospheric Glows */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] rounded-full bg-[rgba(0,240,255,0.03)] blur-[150px] pointer-events-none" />
-      <div className="absolute top-1/3 right-1/4 w-[500px] h-[500px] rounded-full bg-[rgba(124,58,237,0.04)] blur-[120px] pointer-events-none" />
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-[radial-gradient(circle_at_center,rgba(0,240,255,0.15),transparent_70%)] pointer-events-none" />
+      <div className="absolute top-1/3 right-1/4 w-[500px] h-[500px] bg-[radial-gradient(circle_at_center,rgba(124,58,237,0.15),transparent_70%)] pointer-events-none" />
 
       {/* Hero Content */}
       <div className="relative z-10 max-w-5xl mx-auto px-4 sm:px-6 text-center py-32 mt-16">

@@ -22,7 +22,7 @@ export default function Projects() {
 
   return (
     <section id="projects" className="py-32 relative z-10 w-full">
-      <div className="absolute top-1/2 left-0 w-[500px] h-[500px] bg-[#00f0ff]/5 blur-[200px] pointer-events-none -translate-x-1/2" />
+      <div className="absolute top-1/2 left-0 w-[500px] h-[500px] bg-[radial-gradient(circle_at_center,rgba(0,240,255,0.1),transparent_70%)] pointer-events-none -translate-x-1/2" />
       
       <div className="max-w-7xl mx-auto px-4 sm:px-6 relative">
         {/* Header */}

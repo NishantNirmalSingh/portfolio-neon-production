@@ -19,7 +19,7 @@ export default function About() {
       
       {/* Aesthetic Section Glow */}
       <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[1px] h-32 bg-gradient-to-b from-transparent via-[#00f0ff]/50 to-transparent" />
-      <div className="absolute top-16 left-1/2 -translate-x-1/2 w-[600px] h-[400px] bg-[#7c3aed]/5 blur-[150px] pointer-events-none" />
+      <div className="absolute top-16 left-1/2 -translate-x-1/2 w-[600px] h-[400px] bg-[radial-gradient(ellipse_at_center,rgba(124,58,237,0.15),transparent_70%)] pointer-events-none" />
 
       <div className="max-w-6xl mx-auto px-4 sm:px-6">
         <div className="grid md:grid-cols-2 gap-16 items-center">

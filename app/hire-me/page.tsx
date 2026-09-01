@@ -180,7 +180,7 @@ export default function HireMePage() {
     return (
       <main className="min-h-screen relative flex flex-col pt-24 overflow-hidden z-10">
         <Navbar />
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-[#00f0ff]/10 blur-[150px] pointer-events-none" />
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-[radial-gradient(circle_at_center,rgba(0,240,255,0.15),transparent_70%)] pointer-events-none" />
         <div className="flex-1 flex items-center justify-center px-4">
           <motion.div initial={{ scale: 0.9, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} className="glass-tier-3 border-[#00f0ff]/30 rounded-3xl p-12 text-center max-w-md w-full shadow-[0_0_50px_rgba(0,240,255,0.2)]">
             <div className="w-24 h-24 rounded-full bg-gradient-to-br from-[#00f0ff] to-[#7c3aed] flex items-center justify-center mx-auto mb-8 shadow-[0_0_30px_#00f0ff]">
@@ -204,8 +204,8 @@ export default function HireMePage() {
       <Navbar />
       
       {/* Background Magic Elements */}
-      <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-[#7c3aed]/10 blur-[150px] pointer-events-none" />
-      <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-[#00f0ff]/10 blur-[150px] pointer-events-none" />
+      <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-[radial-gradient(circle_at_center,rgba(124,58,237,0.15),transparent_70%)] pointer-events-none" />
+      <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-[radial-gradient(circle_at_center,rgba(0,240,255,0.15),transparent_70%)] pointer-events-none" />
 
       <div className="max-w-3xl mx-auto px-4 sm:px-6 relative z-20">
         <Link

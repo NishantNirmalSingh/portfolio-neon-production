@@ -90,7 +90,6 @@ export default function Skills() {
                       strokeDashoffset: isActive ? [0, 40] : 0,
                     }}
                     transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
-                    style={{ filter: isActive ? "drop-shadow(0 0 8px #00f0ff)" : "none" }}
                   />
                 );
               })}

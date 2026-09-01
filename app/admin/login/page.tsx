@@ -42,7 +42,7 @@ export default function AdminLogin() {
       <div className="glass p-8 md:p-12 border border-white/10 rounded-2xl w-full max-w-md relative overflow-hidden">
         {/* Glow effect */}
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-1 bg-gradient-to-r from-transparent via-[#00f0ff] to-transparent opacity-50"></div>
-        <div className="absolute -top-24 -right-24 w-48 h-48 bg-[#00f0ff]/20 blur-[100px] rounded-full pointer-events-none"></div>
+        <div className="absolute -top-24 -right-24 w-48 h-48 bg-[radial-gradient(circle_at_center,rgba(0,240,255,0.3),transparent_70%)] pointer-events-none"></div>
 
         <div className="mb-8 text-center relative z-10">
           <div className="w-16 h-16 bg-white/[0.03] border border-white/10 rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-[0_0_30px_rgba(0,240,255,0.1)]">

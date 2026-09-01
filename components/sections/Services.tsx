@@ -16,8 +16,8 @@ export default function Services() {
       
       {/* Magical Background Accent */}
       <div className="absolute inset-0 bg-gradient-to-b from-transparent via-[#7c3aed]/5 to-transparent pointer-events-none" />
-      <div className="absolute top-1/3 left-0 w-64 h-64 bg-[#7c3aed]/10 blur-[120px] rounded-full pointer-events-none" />
-      <div className="absolute top-2/3 right-0 w-96 h-96 bg-[#00f0ff]/10 blur-[150px] rounded-full pointer-events-none" />
+      <div className="absolute top-1/3 left-0 w-64 h-64 bg-[radial-gradient(circle_at_center,rgba(124,58,237,0.2),transparent_70%)] pointer-events-none" />
+      <div className="absolute top-2/3 right-0 w-96 h-96 bg-[radial-gradient(circle_at_center,rgba(0,240,255,0.15),transparent_70%)] pointer-events-none" />
 
       <div className="max-w-6xl mx-auto px-4 sm:px-6 relative">
         {/* Header */}

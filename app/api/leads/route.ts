@@ -33,17 +33,16 @@ export async function POST(req: Request) {
 
     if (body.fileData && body.fileName) {
       const safeName = body.fileName.replace(/[^a-zA-Z0-9.\-_]/g, "");
-      
+
       // base64Str format is usually "data:application/pdf;base64,JVBERi..."
       // We extract just the base64 part content
-      const base64Content = body.fileData.includes(',') 
-        ? body.fileData.split(',')[1] 
+      const base64Content = body.fileData.includes(',')
+        ? body.fileData.split(',')[1]
         : body.fileData;
-        
+
       const buffer = Buffer.from(base64Content, 'base64');
       const blob = await put(`leads/${Date.now()}_${safeName}`, buffer, {
         access: "public",
-        addRandomSuffix: false,
       });
       attachmentUrl = blob.url;
     }

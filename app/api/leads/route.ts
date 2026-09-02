@@ -73,6 +73,6 @@ export async function POST(req: Request) {
     return NextResponse.json({ success: true, leadId: lead.id });
   } catch (error: any) {
     console.error("Lead submission error:", error);
-    return NextResponse.json({ error: "Failed to process the lead submission due to a server error. Please verify the system is fully operational." }, { status: 500 });
+    return NextResponse.json({ error: "Debug Error: " + (error.message || String(error)) }, { status: 500 });
   }
 }

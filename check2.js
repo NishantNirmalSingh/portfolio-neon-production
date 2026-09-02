@@ -1,1 +1,0 @@
-const fs = require('fs'); const { execSync } = require('child_process'); try { const out = execSync('node_modules\\\\.bin\\\\tsc.cmd --noEmit').toString(); fs.writeFileSync('npx_out2.txt', 'SUCCESS\n' + out); } catch (e) { fs.writeFileSync('npx_out2.txt', 'ERROR\n' + (e.stdout ? e.stdout.toString() : e.message)); }
